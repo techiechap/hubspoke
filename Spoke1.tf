@@ -1,7 +1,7 @@
 locals {
   spoke1-location       = "CentralUS"
-  spoke1-resource-group = "test-network-rg"
-  prefix-spoke1         = "test"
+  spoke1-resource-group = "dev-network-rg"
+  prefix-spoke1         = "dev"
 }
 
 resource "azurerm_resource_group" "spoke1-vnet-rg" {
@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "spoke1-vnet-rg" {
 }
 
 resource "azurerm_virtual_network" "spoke1-vnet" {
-  name                = "test-vnet"
+  name                = "dev-vnet"
   location            = "${azurerm_resource_group.spoke1-vnet-rg.location}"
   resource_group_name = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   address_space       = ["10.1.0.0/22"]
@@ -21,39 +21,39 @@ resource "azurerm_virtual_network" "spoke1-vnet" {
 }
 
 resource "azurerm_subnet" "spoke1-exter" {
-  name                 = "test-external-subnet"
+  name                 = "dev-external-subnet"
   resource_group_name  = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   virtual_network_name = "${azurerm_virtual_network.spoke1-vnet.name}"
   address_prefix       = "10.1.0.64/27"
 }
 
 resource "azurerm_subnet" "spoke1-inter" {
-  name                 = "test-internal-subnet"
+  name                 = "dev-internal-subnet"
   resource_group_name  = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   virtual_network_name = "${azurerm_virtual_network.spoke1-vnet.name}"
   address_prefix       = "10.1.1.0/24"
 }
 resource "azurerm_subnet" "spoke1-gateway" {
-  name                 = "test-gateway-subnet"
+  name                 = "dev-gateway-subnet"
   resource_group_name  = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   virtual_network_name = "${azurerm_virtual_network.spoke1-vnet.name}"
   address_prefix       = "10.1.1.0/27"
 }
 resource "azurerm_subnet" "spoke1-mgmt" {
-  name                 = "test-management-subnet"
+  name                 = "dev-management-subnet"
   resource_group_name  = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   virtual_network_name = "${azurerm_virtual_network.spoke1-vnet.name}"
   address_prefix       = "10.1.1.0/27"
 }
 resource "azurerm_subnet" "spoke1-app" {
-  name                 = "test-application-subnet"
+  name                 = "dev-application-subnet"
   resource_group_name  = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   virtual_network_name = "${azurerm_virtual_network.spoke1-vnet.name}"
   address_prefix       = "10.1.1.0/27"
 }
 
 resource "azurerm_virtual_network_peering" "spoke1-hub-peer" {
-  name                      = "test-shared-peer"
+  name                      = "dev-shared-peer"
   resource_group_name       = "${azurerm_resource_group.spoke1-vnet-rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.spoke1-vnet.name}"
   remote_virtual_network_id = "${azurerm_virtual_network.hub-vnet.id}"
@@ -115,7 +115,7 @@ resource "azurerm_virtual_machine" "spoke1-vm" {
 }
 
 resource "azurerm_virtual_network_peering" "hub-spoke1-peer" {
-  name                      = "shared-test-peer"
+  name                      = "shared-dev-peer"
   resource_group_name       = "${azurerm_resource_group.hub-vnet-rg.name}"
   virtual_network_name      = "${azurerm_virtual_network.hub-vnet.name}"
   remote_virtual_network_id = "${azurerm_virtual_network.spoke1-vnet.id}"
